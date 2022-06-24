@@ -24,12 +24,10 @@ class Cell
     end
 end
 
-# $grid = Array.new(7) {Array.new(7) {Cell.new}}
 $grid = Array.new(6) {Array.new(7) {Cell.new}}
-$grid << Array.new(7) {Cell.new("border")}
 
 $grid.each_index { |i| $grid[i][-1].state["sleeping"] = "border"}
-# $grid[-1].each_index { |i| $grid[i].state["sleeping"] = "border"}
+$grid << Array.new(7) {Cell.new("border")} # Error was becasue line 29 was looking for "sleeping" but this line creates border.
 
 def neighbour_state(vertical , horizontal)
     return $grid[vertical][(horizontal + 1)].state

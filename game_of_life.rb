@@ -6,9 +6,6 @@
 # build a class, have idea of state, compare in D
 
 # --------------- NEXT STEP IDEAS ----------------
-# Change alive to awake :-)
-# Look in all 8 directions for friends 
-#   - What happens when you are an edge cell? - possibly set a dead cell default?
 # Count of living neighbours
 # Log if state should change
 # Change all states at once
@@ -32,21 +29,22 @@ class Grid
         @grid << Array.new(7) {Cell.new("border")} # Error was becasue line 29 was looking for "sleeping" but this line creates border.
     end
 
-    def starting_state(pos1)
-        @grid[pos1[0]][pos1[1]].state["sleeping"] = "alive"
-        return @grid[0][0]
+    def starting_state(*positions)
+        positions.each do |place|
+          @grid[place[0]][place[1]].state["sleeping"] = "alive"
+        end
     end
-    
+
     def living_neighbour_count(vertical , horizontal)
         neighbour_states = []
-        neighbour_states << @grid[vertical - 1][(horizontal)].state
-        neighbour_states << @grid[vertical - 1][(horizontal + 1)].state
-        neighbour_states << @grid[vertical][(horizontal + 1)].state
-        neighbour_states << @grid[vertical + 1][(horizontal + 1)].state
-        neighbour_states << @grid[vertical + 1][(horizontal)].state
-        neighbour_states << @grid[vertical - 1][(horizontal - 1)].state
-        neighbour_states << @grid[vertical][(horizontal - 1)].state
-        neighbour_states << @grid[vertical - 1][(horizontal - 1)].state
+        neighbour_states << @grid[vertical - 1][horizontal].state
+        neighbour_states << @grid[vertical - 1][horizontal + 1].state
+        neighbour_states << @grid[vertical][horizontal + 1].state
+        neighbour_states << @grid[vertical + 1][horizontal + 1].state
+        neighbour_states << @grid[vertical + 1][horizontal].state
+        neighbour_states << @grid[vertical - 1][horizontal - 1].state
+        neighbour_states << @grid[vertical][horizontal - 1].state
+        neighbour_states << @grid[vertical - 1][horizontal - 1].state
         return neighbour_states.count('alive')
     end
 end

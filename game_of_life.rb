@@ -31,6 +31,11 @@ class Grid
         @grid.each_index { |i| @grid[i][-1].state["sleeping"] = "border"}
         @grid << Array.new(7) {Cell.new("border")} # Error was becasue line 29 was looking for "sleeping" but this line creates border.
     end
+
+    def starting_state(pos1)
+        @grid[pos1[0]][pos1[1]].state["sleeping"] = "alive"
+        return @grid[0][0]
+    end
     
     def living_neighbour_count(vertical , horizontal)
         neighbour_states = []

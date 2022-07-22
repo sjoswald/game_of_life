@@ -111,6 +111,24 @@ end
   # end
 # end
 
+describe "awaking the cells!" do
+  it "can assign a starting cell to be alive" do
+    @world = Grid.new
+    @world.starting_state([0,0])
+    expect(@world.grid[0][0].state).to eq('alive')
+  end
+
+  it "can can count the number of alive cells" do
+    @world = Grid.new
+    @world.starting_state([0,0])
+    count = 0
+    the_earth_is_flat = @world.grid.flatten
+    the_earth_is_flat.each { |cell| cell.state == "alive" ? count += 1 : count}
+    expect(count).to eq(1)
+  end
+end
+
+
 describe "number of awake neighbours" do
   before "create the world" do 
     @world = Grid.new
@@ -119,8 +137,8 @@ describe "number of awake neighbours" do
     expect(@world.living_neighbour_count(2,2)).to eq(0)
   end
 
-  it "outputs 1 when there is only 1 living neighbour" do
-
-  end
+  # it "outputs 1 when there is only 1 living neighbour" do
+  #   expect(@world.living_neighbour_count(2,2)).to eq(1)
+  # end
 end
 

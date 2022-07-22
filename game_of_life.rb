@@ -25,46 +25,24 @@ class Cell
 end
 
 class Grid
-
     attr_accessor :grid
-
-
     def initialize
         @grid = Array.new(6) {Array.new(7) {Cell.new}}
         @grid.each_index { |i| @grid[i][-1].state["sleeping"] = "border"}
         @grid << Array.new(7) {Cell.new("border")} # Error was becasue line 29 was looking for "sleeping" but this line creates border.
     end
-
-    def neighbour_state_north(vertical , horizontal)
-        return @grid[vertical - 1][(horizontal)].state
-    end
     
-    def neighbour_state_north_east(vertical , horizontal)
-        return @grid[vertical - 1][(horizontal + 1)].state
-    end
-    
-    def neighbour_state_east(vertical , horizontal)
-        return @grid[vertical][(horizontal + 1)].state
-    end
-    
-    def neighbour_state_south_east(vertical , horizontal)
-        return @grid[vertical + 1][(horizontal + 1)].state
-    end
-    
-    def neighbour_state_south(vertical , horizontal)
-        return @grid[vertical + 1][(horizontal)].state
-    end
-    
-    def neighbour_state_south_west(vertical , horizontal)
-        return @grid[vertical - 1][(horizontal - 1)].state
-    end
-    
-    def neighbour_state_west(vertical , horizontal)
-        return @grid[vertical][(horizontal - 1)].state
-    end
-    
-    def neighbour_state_north_west(vertical , horizontal)
-        return @grid[vertical - 1][(horizontal - 1)].state
+    def living_neighbour_count(vertical , horizontal)
+        neighbour_states = []
+        neighbour_states << @grid[vertical - 1][(horizontal)].state
+        neighbour_states << @grid[vertical - 1][(horizontal + 1)].state
+        neighbour_states << @grid[vertical][(horizontal + 1)].state
+        neighbour_states << @grid[vertical + 1][(horizontal + 1)].state
+        neighbour_states << @grid[vertical + 1][(horizontal)].state
+        neighbour_states << @grid[vertical - 1][(horizontal - 1)].state
+        neighbour_states << @grid[vertical][(horizontal - 1)].state
+        neighbour_states << @grid[vertical - 1][(horizontal - 1)].state
+        return neighbour_states.count('alive')
     end
 end
 

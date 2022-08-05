@@ -3,8 +3,6 @@
 # Any live cell with 2 or 3 neighbours lives
 # Any sleeping cell wih 3 neighbours comes to life
 
-# build a class, have idea of state, compare in D
-
 require_relative '../game_of_life.rb'
 
 describe 'creates a grid' do
@@ -42,14 +40,16 @@ describe "A cell with different states" do
 end
 
 describe "awaking the cells!" do
-  it "can assign a starting cell to be alive" do
+  before do
     @world = Grid.new
+  end
+    
+  it "can assign a starting cell to be alive" do
     @world.starting_state([0,0])
     expect(@world.grid[0][0].state).to eq('alive')
   end
 
   it "can can count the number of alive cells" do
-    @world = Grid.new
     @world.starting_state([0,0])
     count = 0
     the_earth_is_flat = @world.grid.flatten
@@ -58,7 +58,6 @@ describe "awaking the cells!" do
   end
 
   it "can can count multiple alive cells" do
-    @world = Grid.new
     @world.starting_state([0,0], [0,1], [0,2])
     count = 0
     the_earth_is_flat = @world.grid.flatten
@@ -68,27 +67,93 @@ describe "awaking the cells!" do
 end
 
 describe "number of awake neighbours" do
-  it "outputs 0 when there are no living cells" do
+  before do
     @world = Grid.new
+  end
+
+  it "outputs 0 when there are no living cells" do
     expect(@world.living_neighbour_count(2,2)).to eq(0)
   end
 
   it "outputs 2 when there are 2 living neighbours" do
-    @world = Grid.new
     @world.starting_state([0,0], [0,1], [0,2])
     expect(@world.living_neighbour_count(0,1)).to eq(2)
   end
 
   it "outputs 8 when there are 8 living neighbours" do
-    @world = Grid.new
     @world.starting_state([1,1], [1,2], [1,3], [2,1], [2,3],[3,1], [3,2], [3,3], [4,4])
     expect(@world.living_neighbour_count(2,2)).to eq(8)
   end
 
   it "outputs 0 when there are 0 living neighbours" do
-    @world = Grid.new
     @world.starting_state([0,0], [2,2], [0,5])
     expect(@world.living_neighbour_count(0,0)).to eq(0)
   end
 end
 
+  describe "State swapping rules" do
+    before do
+      @world = Grid.new
+    end
+
+    it "stays asleep when it doesn't have 3 alive neighbours" do
+      expect(@world.grid[1][1].state).to eq("sleeping")
+      expect(@world.assign_future_state(1,1)).to eq('sleeping')
+    end
+
+    it "wakes up if there are 3 living neighbours" do
+      @world.starting_state([0,1], [0,2], [1,0])
+      expect(@world.grid[1][1].state).to eq("sleeping")
+      expect(@world.assign_future_state(1,1)).to eq('alive')
+    end
+
+    it "stays asleep if there are 2 living neighbours" do
+      @world.starting_state([0,1], [0,2])
+      expect(@world.grid[1][1].state).to eq("sleeping")
+      expect(@world.assign_future_state(1,1)).to eq('sleeping')
+    end
+
+    it "stays awake if there are 2 living neighbours" do
+      @world.starting_state([0,1], [1,1], [0,2])
+      expect(@world.grid[1][1].state).to eq("alive")
+      expect(@world.assign_future_state(1,1)).to eq('alive')
+    end
+
+    it "stays awake if there are 2 living neighbours" do
+      @world.starting_state([0,1], [1,1], [0,2], [0,0])
+      expect(@world.grid[1][1].state).to eq("alive")
+      expect(@world.assign_future_state(1,1)).to eq('alive')
+    end
+
+    it "should always stay as a border cell" do
+      @world.starting_state([0,1], [1,1], [0,2], [0,0])
+      expect(@world.grid[6][6].state).to eq("border")
+      expect(@world.assign_future_state(6,6)).to eq('border')
+    end
+  end
+
+
+  describe "looper" do
+    before do
+      @world = Grid.new
+    end
+
+    it "populates future states for all cells" do
+      @world.starting_state([0,0], [0,2], [2,0])
+      @world.looper()
+      count = 0
+      the_earth_is_flat = @world.grid.flatten
+      the_earth_is_flat.each { |cell| cell.future_state == "alive" ? count += 1 : count}
+      expect(count).to eq(1)
+    end
+
+    it "updates cell state" do
+      @world.starting_state([0,0], [0,2], [2,0])
+      @world.looper()
+      @world.change_states()
+      count = 0
+      the_earth_is_flat = @world.grid.flatten
+      the_earth_is_flat.each { |cell| cell.state == "alive" ? count += 1 : count}
+      expect(count).to eq(1)
+    end
+  end

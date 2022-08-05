@@ -1,7 +1,7 @@
 # Any live cell with <2 neighbours dies
 # Any live cell with >3 neighbours dies
 # Any live cell with 2 or 3 neighbours lives
-# Any sleeping cell wih 3 neighbours comes to life
+# Any 0 cell wih 3 neighbours comes to life
 
 require_relative '../game_of_life.rb'
 
@@ -18,14 +18,14 @@ describe "A cell with different states" do
     expect(cell).to be_a_kind_of(Cell)
   end
 
-  it 'can be sleeping... zzz ' do
-    cell = Cell.new('sleeping')
-    expect(cell.state).to eq('sleeping')
+  it 'can be 0... zzz ' do
+    cell = Cell.new('0')
+    expect(cell.state).to eq('0')
   end
 
-  it 'can be alive!' do
-    cell = Cell.new('alive')
-    expect(cell.state).to eq('alive')
+  it 'can be 1!' do
+    cell = Cell.new('1')
+    expect(cell.state).to eq('1')
   end
 
   it 'can ride the board/er' do
@@ -44,24 +44,24 @@ describe "awaking the cells!" do
     @world = Grid.new
   end
     
-  it "can assign a starting cell to be alive" do
+  it "can assign a starting cell to be 1" do
     @world.starting_state([0,0])
-    expect(@world.grid[0][0].state).to eq('alive')
+    expect(@world.grid[0][0].state).to eq('1')
   end
 
-  it "can can count the number of alive cells" do
+  it "can can count the number of 1 cells" do
     @world.starting_state([0,0])
     count = 0
     the_earth_is_flat = @world.grid.flatten
-    the_earth_is_flat.each { |cell| cell.state == "alive" ? count += 1 : count}
+    the_earth_is_flat.each { |cell| cell.state == "1" ? count += 1 : count}
     expect(count).to eq(1)
   end
 
-  it "can can count multiple alive cells" do
+  it "can can count multiple 1 cells" do
     @world.starting_state([0,0], [0,1], [0,2])
     count = 0
     the_earth_is_flat = @world.grid.flatten
-    the_earth_is_flat.each { |cell| cell.state == "alive" ? count += 1 : count}
+    the_earth_is_flat.each { |cell| cell.state == "1" ? count += 1 : count}
     expect(count).to eq(3)
   end
 end
@@ -96,33 +96,33 @@ end
       @world = Grid.new
     end
 
-    it "stays asleep when it doesn't have 3 alive neighbours" do
-      expect(@world.grid[1][1].state).to eq("sleeping")
-      expect(@world.assign_future_state(1,1)).to eq('sleeping')
+    it "stays asleep when it doesn't have 3 1 neighbours" do
+      expect(@world.grid[1][1].state).to eq("0")
+      expect(@world.assign_future_state(1,1)).to eq('0')
     end
 
     it "wakes up if there are 3 living neighbours" do
       @world.starting_state([0,1], [0,2], [1,0])
-      expect(@world.grid[1][1].state).to eq("sleeping")
-      expect(@world.assign_future_state(1,1)).to eq('alive')
+      expect(@world.grid[1][1].state).to eq("0")
+      expect(@world.assign_future_state(1,1)).to eq('1')
     end
 
     it "stays asleep if there are 2 living neighbours" do
       @world.starting_state([0,1], [0,2])
-      expect(@world.grid[1][1].state).to eq("sleeping")
-      expect(@world.assign_future_state(1,1)).to eq('sleeping')
+      expect(@world.grid[1][1].state).to eq("0")
+      expect(@world.assign_future_state(1,1)).to eq('0')
     end
 
     it "stays awake if there are 2 living neighbours" do
       @world.starting_state([0,1], [1,1], [0,2])
-      expect(@world.grid[1][1].state).to eq("alive")
-      expect(@world.assign_future_state(1,1)).to eq('alive')
+      expect(@world.grid[1][1].state).to eq("1")
+      expect(@world.assign_future_state(1,1)).to eq('1')
     end
 
     it "stays awake if there are 2 living neighbours" do
       @world.starting_state([0,1], [1,1], [0,2], [0,0])
-      expect(@world.grid[1][1].state).to eq("alive")
-      expect(@world.assign_future_state(1,1)).to eq('alive')
+      expect(@world.grid[1][1].state).to eq("1")
+      expect(@world.assign_future_state(1,1)).to eq('1')
     end
 
     it "should always stay as a border cell" do
@@ -143,7 +143,7 @@ end
       @world.looper()
       count = 0
       the_earth_is_flat = @world.grid.flatten
-      the_earth_is_flat.each { |cell| cell.future_state == "alive" ? count += 1 : count}
+      the_earth_is_flat.each { |cell| cell.future_state == "1" ? count += 1 : count}
       expect(count).to eq(1)
     end
 
@@ -153,7 +153,7 @@ end
       @world.change_states()
       count = 0
       the_earth_is_flat = @world.grid.flatten
-      the_earth_is_flat.each { |cell| cell.state == "alive" ? count += 1 : count}
+      the_earth_is_flat.each { |cell| cell.state == "1" ? count += 1 : count}
       expect(count).to eq(1)
     end
   end
